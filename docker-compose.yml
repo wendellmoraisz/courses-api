@@ -1,0 +1,30 @@
+version: "3.4"
+
+services:
+  coursesdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: coursesdb
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YOUR_PASSWORD
+      - MSSQL_PID=Developer
+    ports:
+      - 1433:1433
+    volumes:
+      - sql_server_data:/var/opt/mssql
+
+  courses.api:
+    container_name: courses.api
+    image: coursesapi
+    build: 
+      context: .
+    environment:
+      - ConnectionStrings__CoursesDb=Server=coursesdb;Database=CoursesDb;User Id=SA;Password=YOUR_PASSWORD;MultipleActiveResultSets=true
+    depends_on:
+      - coursesdb
+    ports:
+      - 8000:8080
+    
+volumes:
+  sql_server_data:
