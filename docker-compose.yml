@@ -20,7 +20,7 @@ services:
     build: 
       context: .
     environment:
-      - ConnectionStrings__CoursesDb=Server=coursesdb;Database=CoursesDb;User Id=SA;Password=YOUR_PASSWORD;MultipleActiveResultSets=true
+      - ConnectionStrings__CoursesDb=Server=coursesdb;Database=CoursesDb;User Id=SA;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true
     depends_on:
       - coursesdb
     ports:

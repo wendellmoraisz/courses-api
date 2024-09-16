@@ -21,7 +21,7 @@ services:
       context: .
       dockerfile: ./Dockerfile.dev
     environment:
-      - ConnectionStrings__CoursesDb=Server=coursesdb;Database=CoursesDb;User Id=SA;Password=YOUR_PASSWORD;MultipleActiveResultSets=true
+      - ConnectionStrings__CoursesDb=Server=coursesdb;Database=CoursesDb;User Id=SA;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Password=123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
