@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+WORKDIR /app
+
+COPY CoursesAPI.csproj .
+RUN dotnet restore
+
+COPY . .
+
+CMD ["dotnet", "watch", "run", "--project" , "CoursesAPI.csproj", "--urls", "https://*:443;http://*:8080"]

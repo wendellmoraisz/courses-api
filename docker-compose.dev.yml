@@ -1,0 +1,41 @@
+version: "3.4"
+
+services:
+  coursesdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: coursesdb
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YOUR_PASSWORD
+      - MSSQL_PID=Developer
+    ports:
+      - 1433:1433
+    volumes:
+      - sql_server_data:/var/opt/mssql
+
+  courses.api:
+    container_name: courses.api
+    image: coursesapi
+    build: 
+      context: .
+      dockerfile: ./Dockerfile.dev
+    environment:
+      - ConnectionStrings__CoursesDb=Server=coursesdb;Database=CoursesDb;User Id=SA;Password=YOUR_PASSWORD;MultipleActiveResultSets=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    depends_on:
+      - coursesdb
+    ports:
+      - 8000:8080
+      - 8001:443
+    command: ["dotnet", "watch","run", -v, "--project" , "CoursesAPI.csproj", "--urls", "https://*:443;http://*:8080"]
+    volumes:
+      - .:/app
+      - /app/obj/
+      - /app/bin/
+      - ~/.aspnet/https:/https:ro
+    
+volumes:
+  sql_server_data:
