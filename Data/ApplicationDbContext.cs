@@ -36,4 +36,29 @@ public class ApplicationDbContext : DbContext
             student.HasKey(s => s.Id);
         });
     }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entities = ChangeTracker.Entries()
+            .Where(x => x.Entity is BaseEntity &&
+                       (x.State == EntityState.Added || x.State == EntityState.Modified));
+
+        foreach (var entity in entities)
+        {
+            var now = DateTime.UtcNow;
+
+            if (entity.State == EntityState.Added)
+            {
+                ((BaseEntity)entity.Entity).CreatedAt = now;
+            }
+
+            if (entity.State == EntityState.Modified)
+            {
+                ((BaseEntity)entity.Entity).UpdatedAt = now;
+            }
+
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
 }
