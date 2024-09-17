@@ -1,4 +1,5 @@
 using CoursesAPI.Data;
+using CoursesAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();
 
 var connectionString = builder.Configuration.GetConnectionString("CoursesDb");
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(connectionString));
