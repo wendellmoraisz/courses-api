@@ -1,3 +1,4 @@
+using CoursesAPI.Common.Exceptions;
 using CoursesAPI.Data;
 using CoursesAPI.Models;
 
@@ -32,9 +33,15 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         _context.Update(entity);
     }
 
-    public void Delete(T entity)
+    public void Delete(int Id)
     {
-        _context.Remove(entity);
+        var entity = _context.Set<T>().FirstOrDefault(x => x.Id == Id);
+        if (entity is not null)
+        {
+            _context.Remove(entity);
+        } else {
+            throw new NotFoundException("Instrutor não encontrado");
+        }
     }
 
 }
